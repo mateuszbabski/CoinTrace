@@ -2,6 +2,7 @@
 using FluentValidation;
 using System.Reflection;
 using Application.DTOs.Account;
+using Application.DTOs.Budget;
 
 namespace Application
 {
@@ -14,6 +15,7 @@ namespace Application
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
+            services.AddScoped<IValidator<CreateBudgetRequest>, CreateBudgetValidator>();
             return services;
         }
     }

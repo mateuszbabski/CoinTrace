@@ -9,6 +9,7 @@ namespace Persistence.Context
         {
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<Budget> Budgets { get; set; }
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
@@ -22,6 +23,10 @@ namespace Persistence.Context
 
             modelBuilder.Entity<User>()
                 .Property(x => x.PhoneNumber)
+                .IsRequired(false);
+
+            modelBuilder.Entity<Budget>()
+                .Property(x => x.Description)
                 .IsRequired(false);
         }
     }
