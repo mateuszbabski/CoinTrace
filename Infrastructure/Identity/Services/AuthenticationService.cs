@@ -87,7 +87,8 @@ namespace Infrastructure.Identity.Services
             { 
                 IsSuccess = true, 
                 Id = user.Id, 
-                Email = user.Email
+                Email = user.Email,
+                FirstName = user.FirstName
             };
         }
 

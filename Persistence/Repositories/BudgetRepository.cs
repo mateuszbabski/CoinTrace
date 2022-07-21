@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Context;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,13 @@ namespace Persistence.Repositories
         {
 
         }
-        public async Task GetBudgetById()
+        public async Task<Budget> GetBudgetById(int id, int userId)
         {
+            var result = await _dbContext.Budgets
+                .Where(b => b.CreatedById == userId)
+                .FirstOrDefaultAsync(t => t.Id == id);
 
+            return result;
         }
         public async Task CreateBudget(Budget budget)
         {
@@ -36,9 +41,10 @@ namespace Persistence.Repositories
         {
 
         }
-        public async Task DeleteBudget()
+        public async Task DeleteBudget(Budget budget)
         {
-
+            _dbContext.Budgets.Remove(budget);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

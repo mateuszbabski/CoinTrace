@@ -1,13 +1,14 @@
 ﻿using Application.DTOs.Budget;
+using Domain.Entities;
 
 namespace Application.Interfaces
 {
     public interface IBudgetService
     {
-        Task<int> CreateBudgetAsync(CreateBudgetRequest request);
-        Task DeleteBudgetAsync();
+        Task<Budget> CreateBudgetAsync(CreateBudgetRequest request);
+        Task DeleteBudgetAsync(int id);
         Task GetAllBudgetsAsync();
-        Task GetBudgetByIdAsync();
+        Task<BudgetViewModel> GetBudgetByIdAsync(int id);
         Task UpdateBudgetAsync();
     }
 }

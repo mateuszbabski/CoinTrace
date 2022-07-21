@@ -9,6 +9,8 @@ namespace Application.Interfaces
 {
     public interface IBudgetRepository
     {
+        Task<Budget> GetBudgetById(int id, int userId);
         Task CreateBudget(Budget budget);
+        Task DeleteBudget(Budget budget);
     }
 }

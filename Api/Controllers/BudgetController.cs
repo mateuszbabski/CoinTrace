@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class BudgetController : ControllerBase
@@ -16,11 +16,24 @@ namespace Api.Controllers
         {
             _budgetService = budgetService;
         }
-        [HttpPost]
-        public async Task<ActionResult> AddBudget(CreateBudgetRequest request)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BudgetViewModel>> GetBudgetById(int id)
         {
-            await _budgetService.CreateBudgetAsync(request);
-            return Ok(request);
+            var result = await _budgetService.GetBudgetByIdAsync(id);
+            return result;
+        }
+        [HttpPost]
+        public async Task<ActionResult<BudgetViewModel>> AddBudget(CreateBudgetRequest request)
+        {
+            var result = await _budgetService.CreateBudgetAsync(request);
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<string>> DeleteBudget(int id)
+        {
+            await _budgetService.DeleteBudgetAsync(id);
+            return Ok($"Budget {id} deleted");
         }
     }
 }
