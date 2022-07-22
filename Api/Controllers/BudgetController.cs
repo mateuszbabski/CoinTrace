@@ -16,12 +16,21 @@ namespace Api.Controllers
         {
             _budgetService = budgetService;
         }
+
+        [HttpGet]
+        public async Task<IEnumerable<BudgetViewModel>> GetAllBudgets()
+        {
+            var result = await _budgetService.GetAllBudgetsAsync();
+            return result;
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<BudgetViewModel>> GetBudgetById(int id)
         {
             var result = await _budgetService.GetBudgetByIdAsync(id);
             return result;
         }
+
         [HttpPost]
         public async Task<ActionResult<BudgetViewModel>> AddBudget(CreateBudgetRequest request)
         {
@@ -35,5 +44,13 @@ namespace Api.Controllers
             await _budgetService.DeleteBudgetAsync(id);
             return Ok($"Budget {id} deleted");
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateBudget(int id, CreateBudgetRequest request)
+        {
+            await _budgetService.UpdateBudgetAsync(id, request);
+            return Ok();
+        }
+
     }
 }

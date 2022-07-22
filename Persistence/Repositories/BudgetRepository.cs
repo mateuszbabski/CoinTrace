@@ -19,9 +19,14 @@ namespace Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task GetAllBudgets()
+        public async Task<IEnumerable<Budget>> GetAllBudgets(int userId)
         {
+            var result = await _dbContext.Budgets
+                .Where(b => b.CreatedById == userId)
+                .OrderBy(n => n.Name)
+                .ToListAsync();
 
+            return result;
         }
         public async Task<Budget> GetBudgetById(int id, int userId)
         {
@@ -37,9 +42,10 @@ namespace Persistence.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateBudget()
+        public async Task UpdateBudget(Budget budget)
         {
-
+            _dbContext.Update(budget);
+            await _dbContext.SaveChangesAsync();
         }
         public async Task DeleteBudget(Budget budget)
         {

@@ -5,10 +5,10 @@ namespace Application.Interfaces
 {
     public interface IBudgetService
     {
-        Task<Budget> CreateBudgetAsync(CreateBudgetRequest request);
-        Task DeleteBudgetAsync(int id);
-        Task GetAllBudgetsAsync();
+        Task<IEnumerable<BudgetViewModel>> GetAllBudgetsAsync();
         Task<BudgetViewModel> GetBudgetByIdAsync(int id);
-        Task UpdateBudgetAsync();
+        Task<Budget> CreateBudgetAsync(CreateBudgetRequest request);
+        Task<Budget> UpdateBudgetAsync(int id, CreateBudgetRequest request);
+        Task DeleteBudgetAsync(int id);
     }
 }

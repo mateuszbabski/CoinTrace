@@ -9,8 +9,10 @@ namespace Application.Interfaces
 {
     public interface IBudgetRepository
     {
+        Task<IEnumerable<Budget>> GetAllBudgets(int userId);
         Task<Budget> GetBudgetById(int id, int userId);
         Task CreateBudget(Budget budget);
         Task DeleteBudget(Budget budget);
+        Task UpdateBudget(Budget budget);
     }
 }
