@@ -1,20 +1,30 @@
-﻿using Domain.Entities;
+﻿using Application.Interfaces;
+using Domain.Common;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Context
 {
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        private readonly ICurrentUserService _userService;
+
+        public ApplicationDbContext(DbContextOptions options, ICurrentUserService userService) : base(options)
         {
+            _userService = userService;
         }
+        
         public DbSet<User> Users { get; set; }
         public DbSet<Budget> Budgets { get; set; }
 
-        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        public async Task<int> SaveChangesAsync()
         {
+            foreach (var entry in ChangeTracker.Entries<AuditableBaseEntity>())
+            {
+                entry.Entity.CreatedById = _userService.UserId;
+            }
 
-        return await base.SaveChangesAsync(cancellationToken);
+            return await base.SaveChangesAsync();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
