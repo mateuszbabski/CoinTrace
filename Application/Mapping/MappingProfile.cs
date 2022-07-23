@@ -15,16 +15,16 @@ namespace Application.Mapping
         public MappingProfile()
         {
             CreateMap<RegisterRequest, User>().ReverseMap();
-            //CreateMap<User, UserViewModel>().ReverseMap();
-
+            
             CreateMap<ChangePasswordRequest, User>()
                 .ForMember(x => x.Password, c => c.MapFrom(w => w.NewPassword));
 
-            CreateMap<CreateBudgetRequest, Budget>();
-                //.ForMember(x => x.CreatedById, c => c.MapFrom(w => w.UserId));
-
+            CreateMap<CreateBudgetRequest, Budget>().ReverseMap();
+                
             CreateMap<Budget, BudgetViewModel>().ReverseMap();
 
         }
     }
 }
+
+
