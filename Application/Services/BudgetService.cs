@@ -49,11 +49,13 @@ namespace Application.Services
         public async Task<Budget> CreateBudgetAsync(CreateBudgetRequest request)
         {
             var budget = _mapper.Map<Budget>(request);
-            //budget.CreatedById = _userService.UserId;
 
-            await _budgetRepository.CreateBudget(budget);
-            return budget;
+            var createdBudget = await _budgetRepository.CreateBudget(budget);
+            return createdBudget;
         }
+            
+            
+
         public async Task<Budget> UpdateBudgetAsync(int id, CreateBudgetRequest request)
         {
             var budget = await _budgetRepository.GetBudgetById(id, _userService.UserId);

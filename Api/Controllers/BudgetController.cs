@@ -46,10 +46,10 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateBudget(int id, CreateBudgetRequest request)
+        public async Task<ActionResult<string>> UpdateBudget(int id, CreateBudgetRequest request)
         {
             await _budgetService.UpdateBudgetAsync(id, request);
-            return Ok();
+            return Ok($"Budget {id} Updated");
         }
 
     }

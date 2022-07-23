@@ -51,6 +51,7 @@ namespace Application.UnitTest.Budget
 
             //    act
             var result = await _sut.GetBudgetByIdAsync(budgetId);
+
             //    assert
             Assert.Equal(budgetId, newBudget.Id);
             Assert.Equal(userId, newBudget.CreatedById);
@@ -102,7 +103,6 @@ namespace Application.UnitTest.Budget
             };
             IEnumerable<BudgetViewModel> expectedBudgetEnumerable = expectedBudgetList;
             
-
             _mapperMock
                 .Setup(m => m.Map<IEnumerable<BudgetViewModel>>(It.IsAny<IEnumerable<Domain.Entities.Budget>>()))
                 .Returns(expectedBudgetEnumerable);
@@ -114,25 +114,56 @@ namespace Application.UnitTest.Budget
             Assert.IsAssignableFrom<IEnumerable<BudgetViewModel>>(budgetList);
             Assert.Equal(2, budgetList.Count());
         }
+
+
+
+        [Fact]
+        public async void CreateBudget_WithValidData_ReturnsCreatedBudgetModel()
+        {
+            //arrange
+            var budgetModel = new CreateBudgetRequest()
+            {
+                Name = "Test",
+                Description = "Test"
+            };
             
+            var expectedBudget = new Domain.Entities.Budget()
+            {
+                Id = 1,
+                Name = "Test",
+                Description = "Test",
+                CreatedById = 1
+            };
+            
+            _mapperMock
+                .Setup(m => m.Map<Domain.Entities.Budget>(It.IsAny<CreateBudgetRequest>))
+                .Returns(expectedBudget);
 
-        //[Fact]
-        //public void CreateBudget_WithValidData_ReturnsOk()
-        //{
-        //    //arrange
-        //    //var newBudget = new Budget()
-        //    //{
-        //    //    Name = "Test",
-        //    //    Description = "Test"
-        //    //};
-        //    //act
-        //    //assert
-        //}
+            _budgetRepositoryMock
+                .Setup(x => x.CreateBudget(It.IsAny<Domain.Entities.Budget>()))
+                .ReturnsAsync(expectedBudget);
+                
+            //act
+            var createdBudget = await _sut.CreateBudgetAsync(budgetModel);
 
-
+            //assert
+            Assert.NotNull(createdBudget);
+            Assert.IsType<Domain.Entities.Budget>(createdBudget);
+        }
 
     }
 }
+
+            
+
+
+
+
+            
+
+            
+            
+
 
 
 

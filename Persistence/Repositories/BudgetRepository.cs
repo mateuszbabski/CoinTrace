@@ -36,11 +36,13 @@ namespace Persistence.Repositories
 
             return result;
         }
-        public async Task CreateBudget(Budget budget)
+        public async Task<Budget> CreateBudget(Budget budget)
         {
             await _dbContext.Budgets.AddAsync(budget);
             await _dbContext.SaveChangesAsync();
+            return budget;
         }
+            
 
         public async Task UpdateBudget(Budget budget)
         {
