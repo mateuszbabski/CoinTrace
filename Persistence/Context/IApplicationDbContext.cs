@@ -7,6 +7,7 @@ namespace Persistence.Context
     {
         DbSet<User> Users { get; set; }
         DbSet<Budget> Budgets { get; set; }
+        DbSet<Transaction> Transactions { get; set; }
 
         //Task<int> SaveChangesAsync(CancellationToken cancellationToken);
         Task<int> SaveChangesAsync();
