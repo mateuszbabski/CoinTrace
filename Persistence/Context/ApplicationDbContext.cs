@@ -16,8 +16,8 @@ namespace Persistence.Context
         
         public DbSet<User> Users { get; set; }
         public DbSet<Budget> Budgets { get; set; }
-
         public DbSet<Transaction> Transactions { get; set; }
+
 
         public async Task<int> SaveChangesAsync()
         {
@@ -45,9 +45,12 @@ namespace Persistence.Context
             modelBuilder.Entity<Transaction>()
                 .Property(x => x.Description)
                 .IsRequired(false);
+
         }
     }
 }
+            
+                
         
 
 

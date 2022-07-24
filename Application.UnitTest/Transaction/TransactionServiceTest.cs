@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.Transaction;
+using Application.Exceptions;
 using Application.Interfaces;
 using Application.Services;
 using AutoMapper;
@@ -75,5 +76,34 @@ namespace Application.UnitTest.Transaction
             Assert.Equal(expectedTransaction.Value, createdTransaction.Value);
             Assert.IsType<Domain.Entities.Transaction>(createdTransaction);
         }
+
+        [Fact]
+        public async void CreateTransaction_WithBudgetIdNotExisting_ReturnsBudgetNotFound()
+        {
+            //arrange
+            var transactionModel = new CreateTransactionRequest() { };
+            var expectedTransaction = new Domain.Entities.Transaction() { };
+            
+
+            _mapperMock
+                .Setup(m => m.Map<Domain.Entities.Transaction>(It.IsAny<CreateTransactionRequest>))
+                .Returns(expectedTransaction);
+
+            _budgetRepositoryMock
+                .Setup(x => x.GetBudgetById(It.IsAny<int>(), It.IsAny<int>()))
+                .ThrowsAsync(new NotFoundException());
+
+            _transactionRepositoryMock
+                .Setup(x => x.CreateTransaction(It.IsAny<Domain.Entities.Transaction>()))
+                .ReturnsAsync(expectedTransaction);
+
+            //act
+            var act = Assert.ThrowsAsync<NotFoundException>(() => _sut.CreateTransactionAsync(transactionModel));
+
+            //assert
+            Assert.IsType<Task<NotFoundException>>(act);
+        }
+            
+            
     }
 }
