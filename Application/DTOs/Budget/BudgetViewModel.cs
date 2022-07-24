@@ -12,5 +12,6 @@ namespace Application.DTOs.Budget
         public string Name { get; set; }
         public string? Description { get; set; }
         public int CreatedById { get; set; }
+        public List<Domain.Entities.Transaction> Transactions { get; set; }
     }
 }

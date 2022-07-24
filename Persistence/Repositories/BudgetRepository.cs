@@ -33,6 +33,7 @@ namespace Persistence.Repositories
         {
             var result = await _dbContext.Budgets
                 .Where(b => b.CreatedById == userId)
+                .Include(b => b.Transactions)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             return result;
