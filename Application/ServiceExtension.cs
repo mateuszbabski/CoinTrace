@@ -6,6 +6,7 @@ using Application.DTOs.Budget;
 using Application.Services;
 using Application.Interfaces;
 using Application.Middleware;
+using Application.DTOs.Transaction;
 
 namespace Application
 {
@@ -19,7 +20,11 @@ namespace Application
 
             services.AddScoped<IValidator<RegisterRequest>, RegisterRequestValidator>();
             services.AddScoped<IValidator<CreateBudgetRequest>, CreateBudgetValidator>();
+            services.AddScoped<IValidator<CreateTransactionRequest>, CreateTransactionValidator>();
+
             services.AddScoped<IBudgetService, BudgetService>();
+            services.AddScoped<ITransactionService, TransactionService>();
+
             return services;
         }
     }

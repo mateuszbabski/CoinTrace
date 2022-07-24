@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Account;
 using Application.DTOs.Budget;
+using Application.DTOs.Transaction;
 using AutoMapper;
 using Domain.Entities;
 using System;
@@ -20,8 +21,11 @@ namespace Application.Mapping
                 .ForMember(x => x.Password, c => c.MapFrom(w => w.NewPassword));
 
             CreateMap<CreateBudgetRequest, Budget>().ReverseMap();
-                
             CreateMap<Budget, BudgetViewModel>().ReverseMap();
+
+            CreateMap<Transaction, TransactionViewModel>().ReverseMap();
+            CreateMap<CreateTransactionRequest, Transaction>().ReverseMap();
+
 
         }
     }

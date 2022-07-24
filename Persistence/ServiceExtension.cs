@@ -28,7 +28,8 @@ namespace Persistence
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBudgetRepository, BudgetRepository>();
-            
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
+
 
             return services;
         }
