@@ -28,6 +28,7 @@ namespace Persistence.Repositories
 
             return result;
         }
+
         public async Task<Budget> GetBudgetById(int id, int userId)
         {
             var result = await _dbContext.Budgets

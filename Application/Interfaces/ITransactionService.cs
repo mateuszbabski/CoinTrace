@@ -11,6 +11,10 @@ namespace Application.Interfaces
 {
     public interface ITransactionService
     {
+        Task<IEnumerable<TransactionViewModel>> GetAllTransactionsAsync();
+        Task<TransactionViewModel> GetTransactionByIdAsync(int id);
         Task<Transaction> CreateTransactionAsync(CreateTransactionRequest request);
+        Task DeleteTransactionAsync(int id);
+        Task<Transaction> UpdateTransactionAsync(int id, CreateTransactionRequest request);
     }
 }

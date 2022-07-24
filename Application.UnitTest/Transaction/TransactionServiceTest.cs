@@ -78,13 +78,12 @@ namespace Application.UnitTest.Transaction
         }
 
         [Fact]
-        public async void CreateTransaction_WithBudgetIdNotExisting_ReturnsBudgetNotFound()
+        public async void CreateTransaction_WithBudgetIdNotExisting_ThrowsBudgetNotFound()
         {
             //arrange
             var transactionModel = new CreateTransactionRequest() { };
             var expectedTransaction = new Domain.Entities.Transaction() { };
             
-
             _mapperMock
                 .Setup(m => m.Map<Domain.Entities.Transaction>(It.IsAny<CreateTransactionRequest>))
                 .Returns(expectedTransaction);
@@ -103,7 +102,81 @@ namespace Application.UnitTest.Transaction
             //assert
             Assert.IsType<Task<NotFoundException>>(act);
         }
-            
-            
+        [Fact]
+        public async void GetTransactionById_WithIdNotExisting_ThrowsNotFoundException()
+        {
+            // arrange
+            _transactionRepositoryMock.Setup(x => x.GetTransactionById(It.IsAny<int>(), It.IsAny<int>()))
+                .ThrowsAsync(new NotFoundException());
+
+            // act
+            var act = Assert.ThrowsAsync<NotFoundException>(() => _sut.GetTransactionByIdAsync(It.IsAny<int>()));
+
+            // assert
+            Assert.IsType<Task<NotFoundException>>(act);
+        }
+        [Fact]
+        public async void GetTransactionById_WithIdExisting_ReturnsTransactionModel()
+        {
+            // arrange
+            var transactionModel = new TransactionViewModel()
+            {
+                Id = 1
+            };
+            _transactionRepositoryMock.Setup(x => x.GetTransactionById(It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync(new Domain.Entities.Transaction());
+
+            _mapperMock.Setup(m => m.Map<TransactionViewModel>(It.IsAny<Domain.Entities.Transaction>()))
+                .Returns(transactionModel);
+
+            // act
+            var transaction = await _sut.GetTransactionByIdAsync(transactionModel.Id);
+
+            // assert
+            Assert.IsType<TransactionViewModel>(transaction);
+            Assert.Equal(transactionModel.Id, transaction.Id);
+        }
+        [Fact]
+        public async void GetTransactionList_WithValidRequest_ReturnsTransactionList()
+        {
+            // arrange 
+            IEnumerable<Domain.Entities.Transaction> transactionList = new List<Domain.Entities.Transaction>();
+            _transactionRepositoryMock.Setup(x => x.GetAllTransactions(It.IsAny<int>()))
+                .ReturnsAsync(transactionList);
+
+            var expectedTransactionList = new List<TransactionViewModel>
+            {
+                new TransactionViewModel
+            {
+                Id = 1,
+                CreatedById = 1,
+                Type = "Expense",
+                Value = 100,
+                Description = "Test",
+            },
+                    new TransactionViewModel
+            {
+                Id = 2,
+                CreatedById = 1,
+                Type = "Expense",
+                Value = 100,
+                Description = "Test",
+            }
+            };
+            IEnumerable<TransactionViewModel> expectedTransactionEnumerable = expectedTransactionList;
+
+            _mapperMock.Setup(m => m.Map<IEnumerable<TransactionViewModel>>(It.IsAny<IEnumerable<Domain.Entities.Transaction>>()))
+                .Returns(expectedTransactionEnumerable);
+
+            // act
+            var transactions = await _sut.GetAllTransactionsAsync();
+
+            // assert
+            Assert.IsAssignableFrom<IEnumerable<TransactionViewModel>>(transactions);
+            Assert.Equal(2, transactions.Count());
+        }
+
+
     }
 }
+

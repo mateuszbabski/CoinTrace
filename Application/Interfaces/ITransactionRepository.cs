@@ -9,6 +9,10 @@ namespace Application.Interfaces
 {
     public interface ITransactionRepository
     {
+        Task<IEnumerable<Transaction>> GetAllTransactions(int userId);
+        Task<Transaction> GetTransactionById(int id, int userId);
         Task<Transaction> CreateTransaction(Transaction transaction);
+        Task DeleteTransaction(Transaction transaction);
+        Task UpdateTransaction(Transaction transaction);
     }
 }
