@@ -8,6 +8,7 @@ namespace Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public class BudgetController : ControllerBase
     {
         private readonly IBudgetService _budgetService;
@@ -18,6 +19,9 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IEnumerable<BudgetViewModel>> GetAllBudgets()
         {
             var result = await _budgetService.GetAllBudgetsAsync();
@@ -25,6 +29,9 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<BudgetViewModel>> GetBudgetById(int id)
         {
             var result = await _budgetService.GetBudgetByIdAsync(id);
@@ -32,13 +39,21 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<BudgetViewModel>> AddBudget(CreateBudgetRequest request)
         {
             var result = await _budgetService.CreateBudgetAsync(request);
             return Ok(result);
         }
 
+
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<string>> DeleteBudget(int id)
         {
             await _budgetService.DeleteBudgetAsync(id);
@@ -46,6 +61,10 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<string>> UpdateBudget(int id, CreateBudgetRequest request)
         {
             await _budgetService.UpdateBudgetAsync(id, request);

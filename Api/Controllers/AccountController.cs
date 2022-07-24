@@ -35,18 +35,20 @@ namespace Api.Controllers
         {
             return Ok(await _authenticationService.ChangePasswordAsync(request));
         }
+        //[Authorize(Roles = "Admin")]
         //[HttpGet("{id}", Name = "GetUserById")]
         //public async Task<User> GetUserById(int id)
         //{
         //    return await _userRepository.GetUserByIdAsync(id);
         //}
-            
-        //[Authorize]
+
+        //[Authorize(Roles = "Admin")]
         //[HttpGet("{id}", Name = "GetUserDetailsById")]
         //public async Task<UserViewModel> GetUserDetailsById(int id)
         //{
         //    return Ok(await _authenticationService.GetUserDetailsById(id));
         //}
+
     }
 }
             
