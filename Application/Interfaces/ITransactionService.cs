@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.Transaction;
+using Application.Wrappers;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,12 @@ namespace Application.Interfaces
         Task<Transaction> CreateTransactionAsync(CreateTransactionRequest request);
         Task DeleteTransactionAsync(int id);
         Task<Transaction> UpdateTransactionAsync(int id, CreateTransactionRequest request);
+        Task<PaginatedList<TransactionViewModel>> GetTransactionsBySearchingFormAsync(
+                int budgetId,
+                DateTime dateFrom,
+                DateTime dateTo, 
+                string searchPhrase, 
+                int pageNumber,
+                int pageSize);
     }
 }

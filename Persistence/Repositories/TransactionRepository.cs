@@ -28,6 +28,23 @@ namespace Persistence.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Transaction>> GetTransactionsBySearchingForm(int userId,
+            int budgetId,
+            DateTime dateFrom,
+            DateTime dateTo, 
+            string searchPhrase)
+        {
+            return await _dbContext.Transactions
+                .Where(t => t.CreatedById == userId)
+                .Where(t => t.BudgetId == budgetId)
+                .Where(t => t.TransactionDate >= dateFrom)
+                .Where(t => t.TransactionDate <= dateTo)
+                .Where(u => searchPhrase == null
+                                            || (u.Category.ToLower().Contains(searchPhrase.ToLower())
+                                            || u.Type.ToLower().Contains(searchPhrase.ToLower())))
+                .OrderByDescending(t => t.TransactionDate)
+                .ToListAsync();
+        }    
         public async Task<Transaction> GetTransactionById(int id, int userId)
         {
             return await _dbContext.Transactions
@@ -54,3 +71,4 @@ namespace Persistence.Repositories
         }
     }
 }
+

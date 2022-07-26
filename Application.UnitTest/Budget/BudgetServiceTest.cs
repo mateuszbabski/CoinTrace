@@ -71,7 +71,7 @@ namespace Application.UnitTest.Budget
             //    act
             var act = Assert.ThrowsAsync<NotFoundException>(() => _sut.GetBudgetByIdAsync(budgetId));
             
-            //assert
+            //    assert
             Assert.IsType<Task<NotFoundException>>(act);
         }
 
@@ -120,7 +120,7 @@ namespace Application.UnitTest.Budget
         [Fact]
         public async void CreateBudget_WithValidData_ReturnsCreatedBudgetModel()
         {
-            //arrange
+            //      arrange
             var budgetModel = new CreateBudgetRequest()
             {
                 Name = "Test",
@@ -143,10 +143,10 @@ namespace Application.UnitTest.Budget
                 .Setup(x => x.CreateBudget(It.IsAny<Domain.Entities.Budget>()))
                 .ReturnsAsync(expectedBudget);
                 
-            //act
+            //      act
             var createdBudget = await _sut.CreateBudgetAsync(budgetModel);
 
-            //assert
+            //      assert
             Assert.NotNull(createdBudget);
             Assert.IsType<Domain.Entities.Budget>(createdBudget);
         }

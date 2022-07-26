@@ -54,8 +54,6 @@ namespace Application.Services
             return createdBudget;
         }
             
-            
-
         public async Task<Budget> UpdateBudgetAsync(int id, CreateBudgetRequest request)
         {
             var budget = await _budgetRepository.GetBudgetById(id, _userService.UserId);
@@ -80,3 +78,5 @@ namespace Application.Services
         }
     }
 }
+            
+

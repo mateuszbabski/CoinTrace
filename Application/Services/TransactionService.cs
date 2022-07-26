@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.Transaction;
 using Application.Exceptions;
 using Application.Interfaces;
+using Application.Wrappers;
 using AutoMapper;
 using Domain.Entities;
 using System;
@@ -36,9 +37,33 @@ namespace Application.Services
             var mappedTransactionList = _mapper.Map<IEnumerable<TransactionViewModel>>(transactions);
 
             return mappedTransactionList;
-
         }
 
+        public async Task<PaginatedList<TransactionViewModel>> GetTransactionsBySearchingFormAsync(
+                int budgetId,
+                DateTime dateFrom,
+                DateTime dateTo, 
+                string searchPhrase, 
+                int pageNumber,
+                int pageSize)
+        {
+            var transactionList = await _transactionRepository.GetTransactionsBySearchingForm(
+                _userService.UserId,
+                budgetId,
+                dateFrom,
+                dateTo,
+                searchPhrase);
+
+            var paginatedTransactionList = transactionList
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var transactionViewModel = _mapper.Map<List<TransactionViewModel>>(paginatedTransactionList);
+
+            var result = new PaginatedList<TransactionViewModel>(transactionViewModel, transactionList.Count(), pageNumber, pageSize);
+            return result;
+        }
         public async Task<TransactionViewModel> GetTransactionByIdAsync(int id)
         {
             var transaction = await _transactionRepository.GetTransactionById(id, _userService.UserId);
@@ -93,4 +118,6 @@ namespace Application.Services
 
 
     }
+
+
 }

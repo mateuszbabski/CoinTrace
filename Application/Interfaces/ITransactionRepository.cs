@@ -14,5 +14,11 @@ namespace Application.Interfaces
         Task<Transaction> CreateTransaction(Transaction transaction);
         Task DeleteTransaction(Transaction transaction);
         Task UpdateTransaction(Transaction transaction);
+        Task<IEnumerable<Transaction>> GetTransactionsBySearchingForm(int userId,
+            int budgetId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            string searchPhrase);
     }
 }
+

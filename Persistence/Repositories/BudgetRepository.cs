@@ -38,6 +38,7 @@ namespace Persistence.Repositories
 
             return result;
         }
+
         public async Task<Budget> CreateBudget(Budget budget)
         {
             await _dbContext.Budgets.AddAsync(budget);
@@ -45,7 +46,6 @@ namespace Persistence.Repositories
             return budget;
         }
             
-
         public async Task UpdateBudget(Budget budget)
         {
             _dbContext.Update(budget);
@@ -58,3 +58,4 @@ namespace Persistence.Repositories
         }
     }
 }
+
