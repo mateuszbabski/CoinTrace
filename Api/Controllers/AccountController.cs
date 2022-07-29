@@ -36,6 +36,19 @@ namespace Api.Controllers
         {
             return Ok(await _authenticationService.ChangePasswordAsync(request));
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordRequest request)
+        {
+            return Ok(await _authenticationService.ForgotPasswordAsync(request));
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordRequest request)
+        {
+            return Ok(await _authenticationService.ResetPasswordAsync(request));
+        }
+
         //[Authorize(Roles = "Admin")]
         //[HttpGet("{id}", Name = "GetUserById")]
         //public async Task<User> GetUserById(int id)

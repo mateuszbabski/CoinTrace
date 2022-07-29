@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Account;
 using Application.Interfaces;
+using Application.Wrappers;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
@@ -126,6 +127,57 @@ namespace Infrastructure.Identity.Services
             };
         }
 
+        public async Task<ChangePasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(request.Email);
+            if (user == null)
+                return new ChangePasswordResponse
+                {
+                    IsSuccess = false,
+                    Errors = "Invalid email"
+                };
+
+            user.PasswordResetToken = CreateRandomToken();
+            user.ResetTokenExpires = DateTime.Now.AddDays(1);
+            await _userRepository.UpdateUserAsync(user);
+            return new ChangePasswordResponse
+            {
+                IsSuccess = true,
+                Errors = null
+            };
+        }
+
+        public async Task<ChangePasswordResponse> ResetPasswordAsync(ResetPasswordRequest request)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(request.Email);
+            if (user == null || user.PasswordResetToken == null 
+                                || user.PasswordResetToken != request.Token 
+                                || user.ResetTokenExpires < DateTime.Now)
+                return new ChangePasswordResponse
+                {
+                    IsSuccess = false,
+                    Errors = "Invalid email or token"
+                };
+
+            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            user.Password = request.Password;
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+            user.PasswordResetToken = null;
+            user.ResetTokenExpires = null;
+
+            await _userRepository.UpdateUserAsync(user);
+            return new ChangePasswordResponse
+            {
+                IsSuccess = true,
+                Errors = null,
+                Password = request.Password
+            };
+        }
+
+
+
         private string GenerateJwtToken(User user)
         {
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Key));
@@ -174,10 +226,10 @@ namespace Infrastructure.Identity.Services
             return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
         }
 
-
-
     }
 }
+
+
 
 
 
