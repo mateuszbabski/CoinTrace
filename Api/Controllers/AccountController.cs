@@ -29,6 +29,7 @@ namespace Api.Controllers
         {
             return Ok(await _authenticationService.RegisterAsync(request));
         }
+
         [Authorize]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest request)
