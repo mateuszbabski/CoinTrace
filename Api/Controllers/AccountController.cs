@@ -44,9 +44,9 @@ namespace Api.Controllers
         }
 
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordRequest request)
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordRequest request, [FromQuery]string token)
         {
-            return Ok(await _authenticationService.ResetPasswordAsync(request));
+            return Ok(await _authenticationService.ResetPasswordAsync(request, token));
         }
 
         //[Authorize(Roles = "Admin")]

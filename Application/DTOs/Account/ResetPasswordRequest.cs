@@ -21,7 +21,7 @@ namespace Application.DTOs.Account
         [Compare("Password")]
         public string PasswordConfirmation { get; set; }
 
-        [Required]
-        public string Token { get; set; }
+        //[Required]
+        //public string Token { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace Application.Interfaces
         Task<AuthenticationResponse> RegisterAsync(RegisterRequest request);
         Task<ChangePasswordResponse> ChangePasswordAsync(ChangePasswordRequest request);
         Task<ChangePasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request);
-        Task<ChangePasswordResponse> ResetPasswordAsync(ResetPasswordRequest request);
+        Task<ChangePasswordResponse> ResetPasswordAsync(ResetPasswordRequest request, string token);
 
     }
 }

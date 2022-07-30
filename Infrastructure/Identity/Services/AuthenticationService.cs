@@ -7,6 +7,7 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Settings;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -144,10 +145,15 @@ namespace Infrastructure.Identity.Services
             user.PasswordResetToken = CreateRandomToken();
             user.ResetTokenExpires = DateTime.Now.AddDays(1);
             await _userRepository.UpdateUserAsync(user);
-            
+
+            var route = "api/account/reset-password";
+            var origin = "https://localhost:7041";
+            var endpointUri = new Uri(string.Concat($"{origin}/", route));
+            var passwordResetUri = QueryHelpers.AddQueryString(endpointUri.ToString(), "token", user.PasswordResetToken);
+
             var emailRequest = new EmailRequest()
             {
-                Body = $"Reset token - {user.PasswordResetToken}",
+                Body = $"Reset token - {user.PasswordResetToken} - {passwordResetUri}",
                 To = request.Email,
                 Subject = "Reset Password Token"
             };
@@ -161,11 +167,11 @@ namespace Infrastructure.Identity.Services
             };
         }
 
-        public async Task<ChangePasswordResponse> ResetPasswordAsync(ResetPasswordRequest request)
+        public async Task<ChangePasswordResponse> ResetPasswordAsync(ResetPasswordRequest request, string token)
         {
             var user = await _userRepository.GetUserByEmailAsync(request.Email);
             if (user == null || user.PasswordResetToken == null 
-                                || user.PasswordResetToken != request.Token 
+                                || user.PasswordResetToken != token 
                                 || user.ResetTokenExpires < DateTime.Now)
                 return new ChangePasswordResponse
                 {
@@ -189,9 +195,6 @@ namespace Infrastructure.Identity.Services
                 Password = request.Password
             };
         }
-
-
-
         private string GenerateJwtToken(User user)
         {
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Key));
@@ -242,6 +245,9 @@ namespace Infrastructure.Identity.Services
 
     }
 }
+
+
+
 
 
 
