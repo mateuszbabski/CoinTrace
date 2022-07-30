@@ -11,6 +11,7 @@ using System.Linq;
 using MailKit.Net.Smtp;
 using System.Text;
 using System.Threading.Tasks;
+using MimeKit.Text;
 
 namespace Infrastructure.Services
 {
@@ -28,12 +29,11 @@ namespace Infrastructure.Services
             try
             {
                 var email = new MimeMessage();
-                email.Sender = new MailboxAddress(_mailSettings.DisplayName, request.From ?? _mailSettings.EmailFrom);
+                email.Sender = new MailboxAddress(_mailSettings.DisplayName, _mailSettings.EmailFrom);
                 email.To.Add(MailboxAddress.Parse(request.To));
                 email.Subject = request.Subject;
+                email.Body = new TextPart(TextFormat.Html) { Text = request.Body };
 
-                var builder = new BodyBuilder();
-                email.Body = builder.ToMessageBody();
 
                 using var smtp = new SmtpClient();
                 smtp.Connect(_mailSettings.SmtpHost, _mailSettings.SmtpPort, SecureSocketOptions.StartTls);
@@ -49,3 +49,5 @@ namespace Infrastructure.Services
         }
     }
 }
+
+

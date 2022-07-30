@@ -25,7 +25,6 @@ namespace Persistence
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
-            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBudgetRepository, BudgetRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
@@ -35,3 +34,4 @@ namespace Persistence
         }
     }
 }
+            

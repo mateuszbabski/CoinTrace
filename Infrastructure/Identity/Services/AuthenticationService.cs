@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.Account;
+using Application.DTOs.Email;
 using Application.Interfaces;
 using Application.Wrappers;
 using AutoMapper;
@@ -24,16 +25,19 @@ namespace Infrastructure.Identity.Services
         private readonly JWTSettings _jwtSettings;
         private readonly IMapper _mapper;
         private readonly ICurrentUserService _userService;
+        private readonly IEmailService _emailService;
 
         public AuthenticationService(IUserRepository userRepository,
             JWTSettings jwtSettings, 
             IMapper mapper,
-            ICurrentUserService userService)
+            ICurrentUserService userService,
+            IEmailService emailService)
         {
             _userRepository = userRepository;
             _jwtSettings = jwtSettings;
             _mapper = mapper;
             _userService = userService;
+            _emailService = emailService;
         }
 
         public async Task<AuthenticationResponse> LoginAsync(AuthenticationRequest request)
@@ -140,6 +144,16 @@ namespace Infrastructure.Identity.Services
             user.PasswordResetToken = CreateRandomToken();
             user.ResetTokenExpires = DateTime.Now.AddDays(1);
             await _userRepository.UpdateUserAsync(user);
+            
+            var emailRequest = new EmailRequest()
+            {
+                Body = $"Reset token - {user.PasswordResetToken}",
+                To = request.Email,
+                Subject = "Reset Password Token"
+            };
+            
+            await _emailService.SendAsync(emailRequest);
+
             return new ChangePasswordResponse
             {
                 IsSuccess = true,
